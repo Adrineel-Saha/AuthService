@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: AuthService
+
+app:
+  jwt:
+    secret: QWRyaW5lZWxfU2FoYV8xOC0xMC0yMDAx
