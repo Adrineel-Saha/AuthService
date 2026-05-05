@@ -10,10 +10,13 @@ import org.springframework.stereotype.Service;
 public class AuthServiceImpl implements AuthService{
 
     @Autowired
-    UserCredentialRepository userCredentialRepository;
+    private UserCredentialRepository userCredentialRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Override
     public String saveUser(UserCredential userCredential) {
@@ -21,4 +24,11 @@ public class AuthServiceImpl implements AuthService{
         userCredentialRepository.save(userCredential);
         return "User created with th given credentials";
     }
+
+    @Override
+    public String generateToken(String userName) {
+        return jwtService.generateToken(userName);
+    }
+
+
 }

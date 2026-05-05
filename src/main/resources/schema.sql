@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS User_Credential;
+
+CREATE TABLE User_Credential (
+    User_Id INT AUTO_INCREMENT PRIMARY KEY,
+    User_Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(150) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL
+);

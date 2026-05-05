@@ -4,4 +4,5 @@ import com.cognizant.authservice.entities.UserCredential;
 
 public interface AuthService {
     String saveUser(UserCredential credential);
+    String generateToken(String userName);
 }
