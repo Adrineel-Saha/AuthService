@@ -1,27 +1,26 @@
-package com.cognizant.authservice.entities;
+package com.cognizant.authservice.dtos;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-@Entity
-@Table(name="User_Credential")
 @Data
-public class UserCredential {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="User_Id")
+public class UserCredentialDTO {
+
     private int id;
 
-    @Column(name="User_Name")
+    @NotBlank(message="User Name cannot be blank")
+    @Size(min = 3, max = 50, message = "User Name must be between 3 to 50 characters")
     private String userName;
 
-    @Column(name="Email")
+    @Email(message="Please enter a valid email")
+    @NotBlank(message="Email cannot be blank")
     private String email;
 
-    @Column(name="Password")
     private String password;
 
-    @Column(name="Role")
     private String role;
 
 //    public int getId() {
@@ -54,13 +53,5 @@ public class UserCredential {
 //
 //    public void setPassword(String password) {
 //        this.password = password;
-//    }
-//
-//    public String getRole() {
-//        return role;
-//    }
-//
-//    public void setRole(String role) {
-//        this.role = role;
 //    }
 }

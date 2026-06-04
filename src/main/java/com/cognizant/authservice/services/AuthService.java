@@ -1,8 +1,10 @@
 package com.cognizant.authservice.services;
 
-import com.cognizant.authservice.entities.UserCredential;
+import com.cognizant.authservice.dtos.TokenValidationResponse;
+import com.cognizant.authservice.dtos.UserCredentialDTO;
 
 public interface AuthService {
-    String saveUser(UserCredential credential);
-    String generateToken(String userName);
+    UserCredentialDTO saveUser(UserCredentialDTO userCredentialDTO);
+    String generateToken(String userName, String role);
+    TokenValidationResponse validateToken(String token);
 }

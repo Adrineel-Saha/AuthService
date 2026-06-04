@@ -1,15 +1,11 @@
 package com.cognizant.authservice.services;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import org.springframework.boot.autoconfigure.ssl.SslBundleProperties;
+import com.cognizant.authservice.dtos.TokenValidationResponse;
 
 import java.security.Key;
-import java.util.Map;
 
 public interface JwtService {
-    String generateToken(String userName);
-//    String createToken(Map<String, Object> claims, String userName);
-    void validateToken(String token);
+    String generateToken(String userName, String role);
+    TokenValidationResponse validateToken(String token);
     Key getSignKey();
 }
