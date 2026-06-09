@@ -68,7 +68,8 @@ public class AuthController {
             String role = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .findFirst()
-                    .orElse("ROLE_USER");
+                    .orElse("ROLE_USER")
+                    .replace("ROLE_", "");
             String token = authService.generateToken(authRequest.getUserName(), role);
             return new ResponseEntity<>(token, HttpStatus.OK);
         }
