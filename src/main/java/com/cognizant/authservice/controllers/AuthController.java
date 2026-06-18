@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
         name="CRUD REST APIs for Auth Service",
         description="CRUD REST APIs - Register User, Get JWT Token, Validate JWT Token"
 )
-@CrossOrigin(originPatterns = { "http://*:9191", "https://*:9191", "http://*:4200", "https://*:4200" })
 @Slf4j
 public class AuthController {
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
