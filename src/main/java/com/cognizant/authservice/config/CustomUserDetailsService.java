@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserCredentialRepository userCredentialRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserCredential> userCredential= userCredentialRepository.findByUserName(username);
         return userCredential.map(CustomUserDetails::new).orElseThrow(()->new RuntimeException("User not found with name: " + username));

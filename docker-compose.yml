@@ -1,0 +1,43 @@
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: auth-service
+    container_name: auth-service
+    ports:
+      - "8083:8083"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_INSTANCE_PREFERIPADDRESS=true
+      - "SPRING_DATASOURCE_URL=jdbc:mysql://auth-mysql:3306/AuthServiceDatabase?allowPublicKeyRetrieval=true&useSSL=false"
+    depends_on:
+      auth-mysql:
+        condition: service_healthy
+    networks:
+      - microservices-net
+
+  auth-mysql:
+    image: mysql:8.0
+    container_name: auth-mysql
+    # Not published to the host (your local MySQL already owns host 3306).
+    # Reachable by other containers at auth-mysql:3306 on the shared network.
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=AuthServiceDatabase
+    volumes:
+      - auth-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - microservices-net
+
+volumes:
+  auth-mysql-data:
+
+networks:
+  microservices-net:
+    external: true
