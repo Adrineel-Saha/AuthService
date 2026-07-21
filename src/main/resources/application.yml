@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: AuthService
+  config:
+    import: "configserver:"
   cloud:
     config:
       discovery:

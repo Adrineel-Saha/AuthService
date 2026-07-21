@@ -5,12 +5,20 @@ services:
       dockerfile: Dockerfile
     image: auth-service
     container_name: auth-service
+    # Retry startup until ConfigServer is registered/reachable (handles the
+    # race when everything is started together with one `docker compose up`).
+    restart: on-failure
     ports:
       - "8083:8083"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - EUREKA_INSTANCE_PREFERIPADDRESS=true
       - "SPRING_DATASOURCE_URL=jdbc:mysql://auth-mysql:3306/AuthServiceDatabase?allowPublicKeyRetrieval=true&useSSL=false"
+      # Config sets logging.file.name to a C:/ path (used by Jenkins/local);
+      # override to a container path written to the 'app-logs' Docker volume.
+      - LOGGING_FILE_NAME=/app/logs/AuthService/AuthService-8083.log
+    volumes:
+      - app-logs:/app/logs
     depends_on:
       auth-mysql:
         condition: service_healthy
@@ -37,6 +45,7 @@ services:
 
 volumes:
   auth-mysql-data:
+  app-logs:
 
 networks:
   microservices-net:
