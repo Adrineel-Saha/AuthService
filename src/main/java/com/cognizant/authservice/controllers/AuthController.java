@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 )
 @Slf4j
 public class AuthController {
-    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+//    private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     @Autowired
     private AuthService authService;
 
