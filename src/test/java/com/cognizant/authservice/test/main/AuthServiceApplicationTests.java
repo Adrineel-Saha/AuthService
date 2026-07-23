@@ -11,13 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(
-		classes = AuthServiceApplication.class,
-		properties = {
-				"spring.cloud.config.enabled=false",
-				"app.jwt.secret=PJvubyowaL8Y5ki9mcvARME+QLzAzUFVWwGjCpRsNJc="
-		}
-)
+@SpringBootTest(classes = AuthServiceApplication.class)
 @ActiveProfiles("test")
 class AuthServiceApplicationTests {
 

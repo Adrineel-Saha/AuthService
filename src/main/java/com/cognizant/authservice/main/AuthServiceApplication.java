@@ -1,5 +1,7 @@
 package com.cognizant.authservice.main;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
 import org.modelmapper.ModelMapper;
@@ -16,6 +18,13 @@ import java.util.List;
 @EnableJpaRepositories(basePackages = "com.cognizant.authservice.repositories")
 @EntityScan(basePackages = "com.cognizant.authservice.entities")
 @EnableDiscoveryClient(autoRegister=true)
+@OpenAPIDefinition(
+		info=@Info(
+				title="Auth Service REST API Documentation",
+				description="REST API Documentation for Auth Service",
+				version="v1.0"
+		)
+)
 public class AuthServiceApplication {
 
 	public static void main(String[] args) {

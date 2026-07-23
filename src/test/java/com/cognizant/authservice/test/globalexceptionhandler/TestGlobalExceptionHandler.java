@@ -1,7 +1,7 @@
-package com.cognizant.authservice.test.exceptions;
+package com.cognizant.authservice.test.globalexceptionhandler;
 
-import com.cognizant.authservice.exceptions.ErrorResponse;
-import com.cognizant.authservice.exceptions.GlobalExceptionHandler;
+import com.cognizant.authservice.dtos.ErrorResponse;
+import com.cognizant.authservice.globalexceptionhandler.GlobalExceptionHandler;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.AfterEach;

@@ -5,6 +5,8 @@ import com.cognizant.authservice.dtos.TokenValidationResponse;
 import com.cognizant.authservice.dtos.UserCredentialDTO;
 import com.cognizant.authservice.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,16 @@ public class AuthController {
             summary="Register User REST API",
             description="Used to register user to the database"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description="User Registered"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description="Bad Request"
+            )
+    })
     public ResponseEntity<UserCredentialDTO> addNewUser(@Valid @RequestBody UserCredentialDTO userCredentialDTO){
         log.info("Inside Register");
 
@@ -57,6 +69,16 @@ public class AuthController {
             summary="Get JWT Token REST API",
             description="Used to get JWT token from the database"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description="JWT Received"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description="Unauthorized User"
+            )
+    })
     public ResponseEntity<String> generateToken(@Valid @RequestBody AuthRequest authRequest){
         log.info("Inside Generate Token");
 
@@ -82,6 +104,16 @@ public class AuthController {
             summary="Validate JWT Token REST API",
             description="Used to validate JWT token and return username and role"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description="JWT Validated"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description="Unauthorized User"
+            )
+    })
     public ResponseEntity<TokenValidationResponse> validateToken(@PathVariable("token") String token){
         log.info("Inside Validate Token");
 

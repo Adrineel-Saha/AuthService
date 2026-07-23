@@ -1,4 +1,4 @@
-package com.cognizant.authservice.exceptions;
+package com.cognizant.authservice.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
