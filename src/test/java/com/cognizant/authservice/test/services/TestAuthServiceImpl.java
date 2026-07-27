@@ -3,9 +3,11 @@ package com.cognizant.authservice.test.services;
 import com.cognizant.authservice.dtos.TokenValidationResponse;
 import com.cognizant.authservice.dtos.UserCredentialDTO;
 import com.cognizant.authservice.entities.UserCredential;
+import com.cognizant.authservice.exceptions.RateLimitExceededException;
 import com.cognizant.authservice.repositories.UserCredentialRepository;
 import com.cognizant.authservice.services.AuthServiceImpl;
 import com.cognizant.authservice.services.JwtService;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -25,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class TestAuthServiceImpl {
@@ -280,5 +283,41 @@ class TestAuthServiceImpl {
                     .isInstanceOf(RuntimeException.class)
                     .hasMessageContaining("Invalid token");
         }
+    }
+
+    // ---- Rate limiter fallbacks ----
+
+    @Test
+    void testSaveUserFallbackThrowsRateLimitExceeded() {
+        RequestNotPermitted ex = mock(RequestNotPermitted.class);
+        UserCredentialDTO userCredentialDTO = new UserCredentialDTO();
+
+        RateLimitExceededException thrown = assertThrows(
+                RateLimitExceededException.class,
+                () -> authServiceImpl.saveUserFallback(userCredentialDTO, ex));
+
+        assertEquals("Too many requests. Please try again later.", thrown.getMessage());
+    }
+
+    @Test
+    void testGenerateTokenFallbackThrowsRateLimitExceeded() {
+        RequestNotPermitted ex = mock(RequestNotPermitted.class);
+
+        RateLimitExceededException thrown = assertThrows(
+                RateLimitExceededException.class,
+                () -> authServiceImpl.generateTokenFallback("Suraj", "USER", ex));
+
+        assertEquals("Too many requests. Please try again later.", thrown.getMessage());
+    }
+
+    @Test
+    void testValidateTokenFallbackThrowsRateLimitExceeded() {
+        RequestNotPermitted ex = mock(RequestNotPermitted.class);
+
+        RateLimitExceededException thrown = assertThrows(
+                RateLimitExceededException.class,
+                () -> authServiceImpl.validateTokenFallback("dummy-jwt-token", ex));
+
+        assertEquals("Too many requests. Please try again later.", thrown.getMessage());
     }
 }

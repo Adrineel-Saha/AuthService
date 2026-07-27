@@ -11,7 +11,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -22,13 +25,17 @@ public class AuthConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (req, res, e) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid credentials");
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, AuthenticationEntryPoint authenticationEntryPoint) throws Exception{
         return httpSecurity.csrf(csrf-> csrf.disable()).
                 authorizeHttpRequests(auth->
                         auth.requestMatchers("/api/auth/register", "/api/auth/token", "/api/auth/validate/**","/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html" )
                                 .permitAll().anyRequest().authenticated()).exceptionHandling(ex -> ex
-                .authenticationEntryPoint(
-                        (req, res, e) -> res.sendError(401, "Invalid credentials"))
+                .authenticationEntryPoint(authenticationEntryPoint)
         ).build();
     }
 

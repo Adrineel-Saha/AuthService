@@ -1,6 +1,7 @@
 package com.cognizant.authservice.test.globalexceptionhandler;
 
 import com.cognizant.authservice.dtos.ErrorResponse;
+import com.cognizant.authservice.exceptions.RateLimitExceededException;
 import com.cognizant.authservice.globalexceptionhandler.GlobalExceptionHandler;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -131,5 +132,24 @@ class TestGlobalExceptionHandler {
         ResponseEntity<ErrorResponse> response = globalExceptionHandler.handleGenericException(ex);
 
         assertEquals(500, response.getStatusCode().value());
+    }
+
+    @Test
+    void handleRateLimitExceeded_returns429WithMessage() {
+        RateLimitExceededException ex = new RateLimitExceededException("Too many requests. Please try again later.");
+
+        ResponseEntity<String> response = globalExceptionHandler.handleRateLimitExceeded(ex);
+
+        assertEquals(HttpStatus.TOO_MANY_REQUESTS, response.getStatusCode());
+        assertEquals("Too many requests. Please try again later.", response.getBody());
+    }
+
+    @Test
+    void handleRateLimitExceeded_assertStatusValue() {
+        RateLimitExceededException ex = new RateLimitExceededException("Too many requests. Please try again later.");
+
+        ResponseEntity<String> response = globalExceptionHandler.handleRateLimitExceeded(ex);
+
+        assertEquals(429, response.getStatusCode().value());
     }
 }

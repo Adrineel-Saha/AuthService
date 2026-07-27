@@ -1,21 +1,23 @@
 package com.cognizant.authservice.globalexceptionhandler;
 
 import com.cognizant.authservice.dtos.ErrorResponse;
+import com.cognizant.authservice.exceptions.RateLimitExceededException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
@@ -44,6 +46,12 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining(", "));
         return build(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler(value = RateLimitExceededException.class)
+    public ResponseEntity<String> handleRateLimitExceeded(RateLimitExceededException ex) {
+        ResponseEntity<String> errorResponse = new ResponseEntity<String>(ex.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
+        return errorResponse;
     }
 
     @ExceptionHandler(Exception.class)
