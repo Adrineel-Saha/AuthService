@@ -4,7 +4,6 @@ import com.cognizant.authservice.controllers.AuthController;
 import com.cognizant.authservice.dtos.AuthRequest;
 import com.cognizant.authservice.dtos.TokenValidationResponse;
 import com.cognizant.authservice.dtos.UserCredentialDTO;
-import com.cognizant.authservice.main.AuthServiceApplication;
 import com.cognizant.authservice.services.AuthService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,15 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
@@ -32,8 +28,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(classes = AuthServiceApplication.class)
-@ActiveProfiles("test")
 class TestAuthController {
     @Mock
     private AuthService authService;
@@ -44,17 +38,20 @@ class TestAuthController {
     @InjectMocks
     private AuthController authController;
 
-    @Autowired
     private LocalValidatorFactoryBean validator;
+
+    private AutoCloseable mocks;
 
     @BeforeEach
     void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        mocks = MockitoAnnotations.openMocks(this);
+        validator = new LocalValidatorFactoryBean();
+        validator.afterPropertiesSet();
     }
 
     @AfterEach
     void tearDown() throws Exception {
-
+        mocks.close();
     }
 
     @Test
